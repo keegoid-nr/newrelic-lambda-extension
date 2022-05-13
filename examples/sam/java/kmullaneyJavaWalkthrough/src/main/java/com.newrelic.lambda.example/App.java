@@ -27,7 +27,7 @@ public class App implements RequestHandler<Map<String, Object>, String> {
         tracer.activeSpan().setTag("customAttribute", "customAttributeValue");
 
         // As normal, anything you write to stdout ends up in CloudWatch
-        System.out.println("Hello, world");
+        System.out.println("Hello, Keegoid");
 
         return "Success!";
     }

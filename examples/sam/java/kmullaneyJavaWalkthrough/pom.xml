@@ -2,10 +2,10 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>helloworld</groupId>
-    <artifactId>newrelic-example-java</artifactId>
+    <artifactId>kmullaney-java-walkthrough</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
-    <name>newrelic-example-java</name>
+    <name>kmullaney-java-walkthrough</name>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
