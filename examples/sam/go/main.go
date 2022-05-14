@@ -3,21 +3,21 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/newrelic/go-agent/v3/integrations/nrlambda"
-	"github.com/newrelic/go-agent/v3/newrelic"
+
+	nrlambda "github.com/newrelic/go-agent/v3/integrations/nrlambda"
+	newrelic "github.com/newrelic/go-agent/v3/newrelic"
 )
 
 func handler(ctx context.Context) (string, error) {
 	// At this point, we're handling an invocation. Cold start is over; this code runs for each invocation.
 	// We'd like to add a custom event, and a custom attribute. For that, we need the transaction.
 	if txn := newrelic.FromContext(ctx); nil != txn {
+		// This attribute gets added to the normal AwsLambdaInvocation event
+		txn.AddAttribute("userlevel", "gold")
 		// This is an example of a custom event. `FROM MyGoEvent SELECT *` in New Relic will find this event.
 		txn.Application().RecordCustomEvent("MyGoEvent", map[string]interface{}{
 			"zip": "zap",
 		})
-
-		// This attribute gets added to the normal AwsLambdaInvocation event
-		txn.AddAttribute("customAttribute", "customAttributeValue")
 	}
 
 	// As normal, anything you write to stdout ends up in CloudWatch
