@@ -9,14 +9,14 @@ Parameters:
     AllowedPattern: '[0-9]+'
 
 Resources:
-  NewRelicExample:
+  kmullaneygo:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri:
-        Bucket: !Sub newrelic-example-${AWS::Region}-${NRAccountId}
+        Bucket: !Sub kmullaney${AWS::Region}-${NRAccountId}
         Key: go-example.zip
       Description: A simple Lambda, with New Relic telemetry
-      FunctionName: newrelic-example-go
+      FunctionName: kmullaneygo
       # For go1.x, the handler is the name of your go executable. With the norpc option, it is ignored.
       Handler: handler
       Runtime: provided
@@ -30,13 +30,13 @@ Resources:
         # This layer includes the New Relic Lambda Extension, a sidecar process that sends telemetry
         - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:451483290750:layer:NewRelicLambdaExtension:23
       Policies:
-        # This policy allows the lambda to know the value of the New Relic licence key. We need this so
+        # This policy allows the lambda to know the value of the New Relic license key. We need this so
         # that we can send telemetry back to New Relic
         - AWSSecretsManagerGetSecretValuePolicy:
             SecretArn: !ImportValue NewRelicLicenseKeySecret-NewRelic-LicenseKeySecretARN
   Logs:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: {"Fn::Join": ["", ["/aws/lambda/", {"Ref": "NewRelicExample"}]]}
+      LogGroupName: {"Fn::Join": ["", ["/aws/lambda/", {"Ref": "kmullaneygo"}]]}
       # Lambda functions will auto-create their log group on first execution, but it retains logs forever, which can get expensive.
       RetentionInDays: 7

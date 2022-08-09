@@ -8,7 +8,7 @@ echo "Deploying example in region ${region} for NR account ${accountId} with tru
 
 sam build --use-container
 
-bucket="newrelic-example-${region}-${accountId}"
+bucket="kmullaney${region}-${accountId}"
 
 aws s3 mb --region "${region}" "s3://${bucket}"
 

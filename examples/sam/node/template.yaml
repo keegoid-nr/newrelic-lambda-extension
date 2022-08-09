@@ -9,13 +9,13 @@ Parameters:
     AllowedPattern: '[0-9]+'
 
 Resources:
-  NewRelicExample:
+  kmullaneynodejs16:
     Type: AWS::Serverless::Function
     Properties:
       # In this example, we're using the SAM CLI to package and deploy our lambda. SAM will transform this value during the publish step.
-      CodeUri: newrelic-example-node/
+      CodeUri: kmullaneynode/
       Description: A simple Lambda, with New Relic telemetry
-      FunctionName: newrelic-example-nodejs
+      FunctionName: kmullaneynodejs16
       # The handler for your function needs to be the one provided by the instrumentation layer, below.
       Handler: newrelic-lambda-wrapper.handler
       Runtime: nodejs14.x
@@ -31,15 +31,15 @@ Resources:
       Layers:
         # This layer includes the New Relic Lambda Extension, a sidecar process that sends telemetry,
         # as well as the New Relic Agent for Node.js, and a handler wrapper that makes integration easy.
-        - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:451483290750:layer:NewRelicNodeJS14X:44
+        - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:451483290750:layer:NewRelicNodeJS16X:8
       Policies:
-        # This policy allows the lambda to know the value of the New Relic licence key. We need this so
+        # This policy allows the lambda to know the value of the New Relic license key. We need this so
         # that we can send telemetry back to New Relic
         - AWSSecretsManagerGetSecretValuePolicy:
             SecretArn: !ImportValue NewRelicLicenseKeySecret-NewRelic-LicenseKeySecretARN
   Logs:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: {"Fn::Join": ["", ["/aws/lambda/", {"Ref": "NewRelicExample"}]]}
+      LogGroupName: {"Fn::Join": ["", ["/aws/lambda/", {"Ref": "kmullaneynodejs16"}]]}
       # Lambda functions will auto-create their log group on first execution, but it retains logs forever, which can get expensive.
       RetentionInDays: 7
