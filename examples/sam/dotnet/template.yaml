@@ -1,39 +1,51 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: And example of a simple instrumented Dotnet Lambda
+Description: .NET customer repro
 
 Parameters:
   NRAccountId:
     Type: String
     Description: Your New Relic account ID; necessary for distributed tracing.
     AllowedPattern: '[0-9]+'
+  NRLicenseKey:
+    Type: String
+    Description: Your New Relic ingest key.
 
 Resources:
-  NewRelicExample:
+  KmullaneyDotNet00054687:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./src/NewRelicExampleDotnet/
+      CodeUri: ./src/KmullaneyDotNet00054687/
       Description: A simple Lambda, with New Relic telemetry
-      FunctionName: newrelic-example-dotnet
-      Handler: NewRelicExampleDotnet::NewRelicExampleDotnet.Function::FunctionHandler
+      FunctionName: kmullaney-dotnet-00054687
+      Handler: KmullaneyDotNet00054687::KmullaneyDotNet00054687.Function::FunctionHandler
       Runtime: dotnetcore3.1
-      Timeout: 6
+      Timeout: 30
+      MemorySize: 512
+      # Currently, we don't support Image based PackageType
+      PackageType: Zip
       Environment:
         Variables:
           NEW_RELIC_ACCOUNT_ID: !Sub ${NRAccountId}
-          # NEW_RELIC_EXTENSION_SEND_FUNCTION_LOGS: true
-          # NEW_RELIC_EXTENSION_LOG_LEVEL: DEBUG
+          NEW_RELIC_LICENSE_KEY: !Sub ${NRLicenseKey}
+          NEW_RELIC_TRUSTED_ACCOUNT_KEY: !Sub ${NRAccountId}
+          NEW_RELIC_EXTENSION_LOG_LEVEL: DEBUG
+          NEW_RELIC_EXTENSION_SEND_FUNCTION_LOGS: false
       Layers:
         # This layer includes the New Relic Lambda Extension, a sidecar process that sends telemetry.
-        - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:451483290750:layer:NewRelicLambdaExtension:23
-      Policies:
-        # This policy allows the lambda to know the value of the New Relic licence key. We need this so
+        - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:451483290750:layer:NewRelicLambdaExtension:25
+      # Policies:
+        # This policy allows the lambda to know the value of the New Relic license key. We need this so
         # that we can send telemetry back to New Relic
-        - AWSSecretsManagerGetSecretValuePolicy:
-            SecretArn: !ImportValue NewRelicLicenseKeySecret-NewRelic-LicenseKeySecretARN
+        # value comes from:
+        # - https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-policy-template-list.html#secrets-manager-get-secret-value-policy
+        # - https://github.com/newrelic/newrelic-lambda-cli/blob/6eb350834ce3964634ecb9055da3f1b79adaeca6/newrelic_lambda_cli/integrations.py#L21
+        # - https://github.com/newrelic/newrelic-lambda-cli/blob/98fa2be43514e5b9d3a6d0c0db41b1536ab5b826/newrelic_lambda_cli/templates/license-key-secret.yaml#L50
+        # - AWSSecretsManagerGetSecretValuePolicy:
+            # SecretArn: !ImportValue NewRelicLicenseKeySecret-NewRelic-LicenseKeySecretARN
   Logs:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: {"Fn::Join": ["", ["/aws/lambda/", {"Ref": "NewRelicExample"}]]}
+      LogGroupName: {"Fn::Join": ["", ["/aws/lambda/", {"Ref": "KmullaneyDotNet00054687"}]]}
       # Lambda functions will auto-create their log group on first execution, but it retains logs forever, which can get expensive.
       RetentionInDays: 7
