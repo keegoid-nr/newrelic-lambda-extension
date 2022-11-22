@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: .NET customer repro
+
+Parameters:
+  NRAccountId:
+    Type: String
+    Description: Your New Relic account ID; necessary for distributed tracing.
+    AllowedPattern: '[0-9]+'
+  NRLicenseKey:
+    Type: String
+    Description: Your New Relic ingest key.
+
+Resources:
+  KmullaneyDotNet00054687Repro:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/KmullaneyDotNet00054687Repro/
+      Description: A simple Lambda, with New Relic telemetry
+      FunctionName: kmullaney-dotnet-00054687-repro
+      Handler: KmullaneyDotNet00054687Repro::KmullaneyDotNet00054687Repro.APIGatewayLambdaEntryPoint::FunctionHandlerAsync
+      Runtime: dotnetcore3.1
+      Timeout: 30
+      MemorySize: 512
+      # Currently, we don't support Image based PackageType
+      PackageType: Zip
+      Environment:
+        Variables:
+          NEW_RELIC_ACCOUNT_ID: !Sub ${NRAccountId}
+          NEW_RELIC_LICENSE_KEY: !Sub ${NRLicenseKey}
+          NEW_RELIC_TRUSTED_ACCOUNT_KEY: !Sub ${NRAccountId}
+          NEW_RELIC_EXTENSION_LOG_LEVEL: DEBUG
+          NEW_RELIC_EXTENSION_SEND_FUNCTION_LOGS: true
+      Layers:
+        # This layer includes the New Relic Lambda Extension, a sidecar process that sends telemetry.
+        - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:451483290750:layer:NewRelicLambdaExtension:27
+  Logs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: {"Fn::Join": ["", ["/aws/lambda/", {"Ref": "KmullaneyDotNet00054687Repro"}]]}
+      # Lambda functions will auto-create their log group on first execution, but it retains logs forever, which can get expensive.
+      RetentionInDays: 7
