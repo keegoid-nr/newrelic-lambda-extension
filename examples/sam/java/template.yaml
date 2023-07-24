@@ -15,7 +15,7 @@ Resources:
       # In this example, we're using the SAM CLI to package and deploy our lambda. SAM will transform this value during the publish step.
       CodeUri: NewRelicExampleJava/
       Description: A simple Lambda, with New Relic telemetry
-      FunctionName: newrelic-example-java
+      FunctionName: kmullaney-demo-java
       Handler: com.newrelic.java.HandlerWrapper::handleRequest
       # Lambda Extensions are not supported in the "java8" runtime.
       Runtime: java11

@@ -13,10 +13,10 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri:
-        Bucket: !Sub newrelic-example-${AWS::Region}-${NRAccountId}
+        Bucket: !Sub kmullaney-demo-${AWS::Region}-${NRAccountId}
         Key: go-example.zip
       Description: A simple Lambda, with New Relic telemetry
-      FunctionName: newrelic-example-go
+      FunctionName: kmullaney-demo-go
       # For go1.x, the handler is the name of your go executable. With the norpc option, it is ignored.
       Handler: handler
       Runtime: provided

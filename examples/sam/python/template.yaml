@@ -15,7 +15,7 @@ Resources:
       # In this example, we're using the SAM CLI to package and deploy our lambda. SAM will transform this value during the publish step.
       CodeUri: newrelic_example_python/
       Description: A simple Lambda, with New Relic telemetry
-      FunctionName: newrelic-example-python
+      FunctionName: kmullaney-demo-python
       # The handler for your function needs to be the one provided by the instrumentation layer, below.
       Handler: newrelic_lambda_wrapper.handler
       Runtime: python3.10

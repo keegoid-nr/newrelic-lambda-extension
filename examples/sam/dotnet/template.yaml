@@ -14,7 +14,7 @@ Resources:
     Properties:
       CodeUri: ./src/NewRelicExampleDotnet/
       Description: A simple Lambda, with New Relic telemetry
-      FunctionName: newrelic-example-dotnet
+      FunctionName: kmullaney-demo-dotnet
       Handler: NewRelicExampleDotnet::NewRelicExampleDotnet.Function::FunctionHandler
       Runtime: dotnetcore3.1
       Timeout: 6
