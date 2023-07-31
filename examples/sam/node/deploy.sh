@@ -5,7 +5,7 @@ region=$2
 
 echo "region set to ${region}"
 
-sam build --use-container
+sam build #--use-container
 
 bucket="kmullaney-demo-${region}-${accountId}"
 
