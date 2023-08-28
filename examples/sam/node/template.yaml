@@ -26,10 +26,13 @@ Resources:
           # For the instrumentation handler to invoke your real handler, we need this value
           NEW_RELIC_LAMBDA_HANDLER: app.lambdaHandler
           NEW_RELIC_ACCOUNT_ID: !Sub ${NRAccountId}
-          NEW_RELIC_EXTENSION_SEND_FUNCTION_LOGS: true
-          NEW_RELIC_EXTENSION_LOG_LEVEL: DEBUG
+          NEW_RELIC_TRUSTED_ACCOUNT_KEY: !Sub ${NRAccountId}
+          NEW_RELIC_DISTRIBUTED_TRACING_ENABLED: true
+          NEW_RELIC_LAMBDA_EXTENSION_ENABLED: false
+          # NEW_RELIC_EXTENSION_SEND_FUNCTION_LOGS: true
+          # NEW_RELIC_EXTENSION_LOG_LEVEL: DEBUG  # prints out agent telemetry bytes among other things
           NEW_RELIC_LOG_ENABLED: true
-          NEW_RELIC_LOG_LEVEL: info
+          NEW_RELIC_LOG_LEVEL: debug
           NEW_RELIC_LOG: stdout
       Layers:
         # This layer includes the New Relic Lambda Extension, a sidecar process that sends telemetry,
