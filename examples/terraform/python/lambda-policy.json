@@ -3,13 +3,10 @@
   "Statement": [
     {
       "Sid": "",
-      "Action": "logs:*",
-      "Effect": "Allow",
-      "Resource": "*"
-    },
-    {
-      "Sid": "",
-      "Action": "s3:*",
+      "Action": [
+        "logs:*",
+        "s3:*"
+      ],
       "Effect": "Allow",
       "Resource": "*"
     }

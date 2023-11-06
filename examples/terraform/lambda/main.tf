@@ -55,6 +55,9 @@ resource "aws_lambda_function" "newrelic_terraform_example_function" {
       NEW_RELIC_LAMBDA_EXTENSION_ENABLED = true
       # Enable Distributed tracing for in-depth monitoring of transactions in lambda (Optional)
       NEW_RELIC_DISTRIBUTED_TRACING_ENABLED = true
+      # Set agent trace level logging
+      NEW_RELIC_LOG_LEVEL = "debug"
+      NEW_RELIC_LOG = "stderr"
       # License key
       # NEW_RELIC_LICENSE_KEY = var.newrelic_license_key
     }
