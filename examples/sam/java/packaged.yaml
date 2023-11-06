@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: An example of a simple instrumented Java Lambda
+Parameters:
+  NRAccountId:
+    Type: String
+    Description: Your New Relic account ID; necessary for distributed tracing.
+    AllowedPattern: '[0-9]+'
+Resources:
+  kmullaneyJavaWalkthrough:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://kmullaney-java-walkthrough-us-west-2-3256093/3613d4600e8cf2431e61ae65ae3960e0
+      Description: A simple Lambda, with New Relic telemetry
+      FunctionName: kmullaney-java-walkthrough
+      Handler: com.newrelic.java.HandlerWrapper::handleRequest
+      Runtime: java11
+      MemorySize: 512
+      PackageType: Zip
+      Environment:
+        Variables:
+          NEW_RELIC_LAMBDA_HANDLER: com.newrelic.lambda.example.App::handleRequest
+          NEW_RELIC_ACCOUNT_ID:
+            Fn::Sub: ${NRAccountId}
+          NEW_RELIC_EXTENSION_SEND_FUNCTION_LOGS: true
+          NEW_RELIC_EXTENSION_LOG_LEVEL: DEBUG
+          NEW_RELIC_LICENSE_KEY_SECRET: KMULLANEY_LICENSE_KEY
+      Layers:
+      - Fn::Sub: arn:${AWS::Partition}:lambda:${AWS::Region}:451483290750:layer:NewRelicJava11:18
+      Policies:
+      - AWSSecretsManagerGetSecretValuePolicy:
+          SecretArn: arn:aws:secretsmanager:us-west-2:368927449855:secret:KMULLANEY_LICENSE_KEY-wCMCyA
+    Metadata:
+      SamResourceId: kmullaneyJavaWalkthrough
+  Logs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName:
+        Fn::Join:
+        - ''
+        - - /aws/lambda/
+          - Ref: kmullaneyJavaWalkthrough
+      RetentionInDays: 7
+    Metadata:
+      SamResourceId: Logs

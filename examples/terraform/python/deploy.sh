@@ -11,4 +11,5 @@ rm -f function.zip
 zip -rq function.zip app.py
 
 terraform validate .
+# terraform plan
 terraform apply

@@ -29,3 +29,8 @@ variable "newrelic_account_id" {
 variable "newrelic_layer" {
   type = string
 }
+
+# variable "newrelic_license_key" {
+#   description = "New Relic license key for the Lambda"
+#   type = string
+# }

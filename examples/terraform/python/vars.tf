@@ -5,3 +5,8 @@ variable "aws_region" {
 variable "newrelic_account_id" {
   type = string
 }
+
+variable "newrelic_license_key" {
+  description = "New Relic license key for the Lambda"
+  type = string
+}

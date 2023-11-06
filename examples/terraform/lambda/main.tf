@@ -55,6 +55,8 @@ resource "aws_lambda_function" "newrelic_terraform_example_function" {
       NEW_RELIC_LAMBDA_EXTENSION_ENABLED = true
       # Enable Distributed tracing for in-depth monitoring of transactions in lambda (Optional)
       NEW_RELIC_DISTRIBUTED_TRACING_ENABLED = true
+      # License key
+      # NEW_RELIC_LICENSE_KEY = var.newrelic_license_key
     }
   }
   # This layer includes the New Relic Lambda Extension, a sidecar process that sends telemetry,
@@ -65,5 +67,5 @@ resource "aws_lambda_function" "newrelic_terraform_example_function" {
 resource "aws_cloudwatch_log_group" "newrelic_terraform_example_log_group" {
   name = "/aws/lambda/${var.lambda_function_name}"
   # Lambda functions will auto-create their log group on first execution, but it retains logs forever, which can get expensive.
-  retention_in_days = 7
+  retention_in_days = 3
 }

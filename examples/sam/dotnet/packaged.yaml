@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: .NET customer repro
+Parameters:
+  NRAccountId:
+    Type: String
+    Description: Your New Relic account ID; necessary for distributed tracing.
+    AllowedPattern: '[0-9]+'
+  NRLicenseKey:
+    Type: String
+    Description: Your New Relic ingest key.
+Resources:
+  KmullaneyDotNet00054687:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://kmullaney-dotnet-00054687-us-west-2-3256093/94738281b632cb2433e012fd189eada2
+      Description: A simple Lambda, with New Relic telemetry
+      FunctionName: kmullaney-dotnet-00054687
+      Handler: KmullaneyDotNet00054687::KmullaneyDotNet00054687.Function::FunctionHandler
+      Runtime: dotnetcore3.1
+      Timeout: 30
+      MemorySize: 512
+      PackageType: Zip
+      Environment:
+        Variables:
+          NEW_RELIC_ACCOUNT_ID:
+            Fn::Sub: ${NRAccountId}
+          NEW_RELIC_LICENSE_KEY:
+            Fn::Sub: ${NRLicenseKey}
+          NEW_RELIC_TRUSTED_ACCOUNT_KEY:
+            Fn::Sub: ${NRAccountId}
+          NEW_RELIC_EXTENSION_LOG_LEVEL: DEBUG
+          NEW_RELIC_EXTENSION_SEND_FUNCTION_LOGS: false
+      Layers:
+      - Fn::Sub: arn:${AWS::Partition}:lambda:${AWS::Region}:451483290750:layer:NewRelicLambdaExtension:25
+    Metadata:
+      SamResourceId: KmullaneyDotNet00054687
+  Logs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName:
+        Fn::Join:
+        - ''
+        - - /aws/lambda/
+          - Ref: KmullaneyDotNet00054687
+      RetentionInDays: 7
+    Metadata:
+      SamResourceId: Logs
