@@ -8,5 +8,5 @@ module "python_test_function" {
   lambda_zip_filename = "function.zip"
   newrelic_account_id = var.newrelic_account_id
   # newrelic_license_key = var.newrelic_license_key
-  newrelic_layer = "arn:aws:lambda:${var.aws_region}:451483290750:layer:NewRelicPython310:13"
+  newrelic_layer = "arn:aws:lambda:${var.aws_region}:451483290750:layer:NewRelicPython310:14"
 }

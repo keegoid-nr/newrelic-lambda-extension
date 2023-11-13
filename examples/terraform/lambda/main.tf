@@ -13,8 +13,22 @@ provider "aws" {
 
 data "aws_caller_identity" "current" {}
 
-data "aws_iam_policy" "newrelic_license_key_policy" {
-  arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/ViewNewRelicLicenseKey"
+resource "aws_iam_policy" "newrelic_license_key_policy" {
+  name        = "lambda-policy"
+  description = "A policy to allow Lambda to get secret values from Secrets Manager"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "secretsmanager:GetSecretValue",
+        ]
+        Effect   = "Allow"
+        Resource = "*" # You can replace this with the ARN of a specific secret if needed
+      }
+    ]
+  })
 }
 
 resource "aws_iam_role" "newrelic_terraform_example_role" {
@@ -30,7 +44,7 @@ resource "aws_iam_role_policy" "newrelic_terraform_example_role_policy" {
 
 resource "aws_iam_role_policy_attachment" "newrelic_license_key_policy_attachment" {
   role       = aws_iam_role.newrelic_terraform_example_role.name
-  policy_arn = data.aws_iam_policy.newrelic_license_key_policy.arn
+  policy_arn = aws_iam_policy.newrelic_license_key_policy.arn
 }
 
 resource "aws_lambda_function" "newrelic_terraform_example_function" {
@@ -40,6 +54,7 @@ resource "aws_lambda_function" "newrelic_terraform_example_function" {
     aws_iam_role.newrelic_terraform_example_role,
     aws_iam_role_policy_attachment.newrelic_license_key_policy_attachment
   ]
+  memory_size   = 256
   filename      = var.lambda_zip_filename
   function_name = var.lambda_function_name
   # The handler for your function needs to be the one provided by the instrumentation layer, below.
