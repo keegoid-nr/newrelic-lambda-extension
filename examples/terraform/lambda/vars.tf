@@ -26,6 +26,10 @@ variable "newrelic_account_id" {
   type = string
 }
 
+variable "newrelic_trusted_account_key" {
+  type = string
+}
+
 variable "newrelic_layer" {
   type = string
 }

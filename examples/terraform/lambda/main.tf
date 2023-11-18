@@ -64,8 +64,10 @@ resource "aws_lambda_function" "newrelic_terraform_example_function" {
   environment {
     variables = {
       # For the instrumentation handler to invoke your real handler, we need this value
-      NEW_RELIC_LAMBDA_HANDLER = var.lambda_function_handler
-      NEW_RELIC_ACCOUNT_ID     = var.newrelic_account_id
+      NEW_RELIC_LAMBDA_HANDLER      = var.lambda_function_handler
+      NEW_RELIC_ACCOUNT_ID          = var.newrelic_account_id
+      NEW_RELIC_TRUSTED_ACCOUNT_KEY = var.newrelic_trusted_account_key
+      NEW_RELIC_APP_NAME            = var.lambda_function_name
       # Enable NR Lambda extension if the telemetry data are ingested via lambda extension
       NEW_RELIC_LAMBDA_EXTENSION_ENABLED = true
       # Enable Distributed tracing for in-depth monitoring of transactions in lambda (Optional)
