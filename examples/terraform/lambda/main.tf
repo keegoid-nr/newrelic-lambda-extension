@@ -54,7 +54,9 @@ resource "aws_lambda_function" "newrelic_terraform_example_function" {
     aws_iam_role.newrelic_terraform_example_role,
     aws_iam_role_policy_attachment.newrelic_license_key_policy_attachment
   ]
-  memory_size   = 256
+  memory_size   = 128
+  timeout = 6
+  reserved_concurrent_executions = 3
   filename      = var.lambda_zip_filename
   function_name = var.lambda_function_name
   # The handler for your function needs to be the one provided by the instrumentation layer, below.
@@ -69,19 +71,35 @@ resource "aws_lambda_function" "newrelic_terraform_example_function" {
       NEW_RELIC_TRUSTED_ACCOUNT_KEY = var.newrelic_trusted_account_key
       NEW_RELIC_APP_NAME            = var.lambda_function_name
       # Enable NR Lambda extension if the telemetry data are ingested via lambda extension
-      NEW_RELIC_LAMBDA_EXTENSION_ENABLED = true
+      NEW_RELIC_LAMBDA_EXTENSION_ENABLED     = true
+      NEW_RELIC_EXTENSION_SEND_FUNCTION_LOGS = true
+      NEW_RELIC_EXTENSION_LOG_LEVEL          = "INFO"
+      NEW_RELIC_LICENSE_KEY_SECRET           = var.newrelic_license_key_secret
+      # NEW_RELIC_LICENSE_KEY = var.newrelic_license_key
       # Enable Distributed tracing for in-depth monitoring of transactions in lambda (Optional)
       NEW_RELIC_DISTRIBUTED_TRACING_ENABLED = true
       # Set agent trace level logging
       NEW_RELIC_LOG_LEVEL = "debug"
-      NEW_RELIC_LOG = "stderr"
-      # License key
-      # NEW_RELIC_LICENSE_KEY = var.newrelic_license_key
+      NEW_RELIC_LOG       = "stderr"
     }
   }
   # This layer includes the New Relic Lambda Extension, a sidecar process that sends telemetry,
   # as well as the New Relic Agent, and a handler wrapper that makes integration easy.
   layers = [var.newrelic_layer]
+
+  publish = true // This will publish a new version
+}
+
+resource "aws_lambda_alias" "newrelic_terraform_example_function_alias" {
+  name             = "${var.lambda_function_name}_alias"
+  function_name    = aws_lambda_function.newrelic_terraform_example_function.function_name
+  function_version = aws_lambda_function.newrelic_terraform_example_function.version
+}
+
+resource "aws_lambda_provisioned_concurrency_config" "provisioned_concurrency" {
+  function_name                     = aws_lambda_function.newrelic_terraform_example_function.function_name
+  provisioned_concurrent_executions = 3
+  qualifier                         = aws_lambda_alias.newrelic_terraform_example_function_alias.name
 }
 
 resource "aws_cloudwatch_log_group" "newrelic_terraform_example_log_group" {

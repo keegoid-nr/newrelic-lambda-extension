@@ -1,4 +1,5 @@
 from newrelic import agent
+import time
 
 # In a python Lambda, the runtime loads the handler code as a module; so code in the top level
 # of the module occurs once, during cold start.
@@ -6,6 +7,9 @@ print("Lambda Handler starting up")
 
 def lambda_handler(event, context):
     # At this point, we're handling an invocation. Cold start is over; this code runs for each invocation.
+
+    # Simulate a delay of 3 seconds
+    time.sleep(2)
 
     # This is an example of a custom event. `FROM MyPythonEvent SELECT *` in New Relic will find this event.
     agent.record_custom_event("MyPythonEvent", {"zip": "zap"})
