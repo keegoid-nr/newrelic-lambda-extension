@@ -14,7 +14,7 @@ import (
 var testHandler = "path/to/app.handler"
 
 func TestRuntimeMethods(t *testing.T) {
-	conf := config.Configuration{}
+	conf := config.Configuration{TestingOverride: true}
 	r := runtimeConfigs[Node]
 	h := handlerConfigs{
 		handlerName: r.wrapperName,
@@ -55,7 +55,7 @@ func TestRuntimeMethods(t *testing.T) {
 }
 
 func TestHandlerCheckJS(t *testing.T) {
-	conf := config.Configuration{}
+	conf := config.Configuration{TestingOverride: true}
 	reg := api.RegistrationResponse{}
 	r := runtimeConfigs[Node]
 	ctx := context.Background()
@@ -68,7 +68,7 @@ func TestHandlerCheckJS(t *testing.T) {
 	reg.Handler = testHandler
 	conf.NRHandler = config.EmptyNRWrapper
 	err = handlerCheck(ctx, &conf, &reg, r)
-	assert.EqualError(t, err, "Missing handler file path/to/app.handler (NEW_RELIC_LAMBDA_HANDLER=Undefined)")
+	assert.EqualError(t, err, "missing handler file path/to/app.handler (NEW_RELIC_LAMBDA_HANDLER=Undefined)")
 
 	// Success
 	dirname, err := os.MkdirTemp("", "")
@@ -86,7 +86,7 @@ func TestHandlerCheckJS(t *testing.T) {
 }
 
 func TestHandlerCheckMJS(t *testing.T) {
-	conf := config.Configuration{}
+	conf := config.Configuration{TestingOverride: true}
 	reg := api.RegistrationResponse{}
 	r := runtimeConfigs[Node]
 	ctx := context.Background()
@@ -99,7 +99,7 @@ func TestHandlerCheckMJS(t *testing.T) {
 	reg.Handler = testHandler
 	conf.NRHandler = config.EmptyNRWrapper
 	err = handlerCheck(ctx, &conf, &reg, r)
-	assert.EqualError(t, err, "Missing handler file path/to/app.handler (NEW_RELIC_LAMBDA_HANDLER=Undefined)")
+	assert.EqualError(t, err, "missing handler file path/to/app.handler (NEW_RELIC_LAMBDA_HANDLER=Undefined)")
 
 	// Success
 	dirname, err := os.MkdirTemp("", "")
@@ -117,7 +117,7 @@ func TestHandlerCheckMJS(t *testing.T) {
 }
 
 func TestHandlerCheckCJS(t *testing.T) {
-	conf := config.Configuration{}
+	conf := config.Configuration{TestingOverride: true}
 	reg := api.RegistrationResponse{}
 	r := runtimeConfigs[Node]
 	ctx := context.Background()
@@ -130,7 +130,7 @@ func TestHandlerCheckCJS(t *testing.T) {
 	reg.Handler = testHandler
 	conf.NRHandler = config.EmptyNRWrapper
 	err = handlerCheck(ctx, &conf, &reg, r)
-	assert.EqualError(t, err, "Missing handler file path/to/app.handler (NEW_RELIC_LAMBDA_HANDLER=Undefined)")
+	assert.EqualError(t, err, "missing handler file path/to/app.handler (NEW_RELIC_LAMBDA_HANDLER=Undefined)")
 
 	// Success
 	dirname, err := os.MkdirTemp("", "")
@@ -148,7 +148,7 @@ func TestHandlerCheckCJS(t *testing.T) {
 }
 
 func TestHandlerCheckPython(t *testing.T) {
-	conf := config.Configuration{}
+	conf := config.Configuration{TestingOverride: true}
 	reg := api.RegistrationResponse{}
 	r := runtimeConfigs[Python]
 	ctx := context.Background()
@@ -161,7 +161,7 @@ func TestHandlerCheckPython(t *testing.T) {
 	reg.Handler = testHandler
 	conf.NRHandler = config.EmptyNRWrapper
 	err = handlerCheck(ctx, &conf, &reg, r)
-	assert.EqualError(t, err, "Missing handler file path/to/app.handler (NEW_RELIC_LAMBDA_HANDLER=Undefined)")
+	assert.EqualError(t, err, "missing handler file path/to/app.handler (NEW_RELIC_LAMBDA_HANDLER=Undefined)")
 
 	// Success
 	dirname, err := os.MkdirTemp("", "")
